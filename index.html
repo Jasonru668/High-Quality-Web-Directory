@@ -1,0 +1,553 @@
+mv HQ1.01.html index.html<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的导航</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: linear-gradient(135deg, #1a1b20 0%, #232428 50%, #1a1b20 100%);
+    color: #e8e8ea;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    padding: 0 0 60px;
+    min-height: 100vh;
+  }
+  .hero {
+    background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(168,85,247,.1));
+    padding: 50px 5% 30px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    margin-bottom: 40px;
+  }
+  .hero h1 {
+    font-size: 32px; font-weight: 700; letter-spacing: 1px;
+    background: linear-gradient(90deg, #a5b4fc, #e879f9, #a5b4fc);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p { color: #9ca3af; margin-top: 10px; font-size: 14px; }
+  .hero .stats { display: flex; justify-content: center; gap: 30px; margin-top: 20px; flex-wrap: wrap; }
+  .hero .stat { color: #d1d5db; font-size: 13px; }
+  .hero .stat b { color: #fff; font-size: 18px; margin-right: 4px; }
+
+  /* ===== 搜索框 ===== */
+  .search-wrap {
+    max-width: 560px; margin: 26px auto 0; position: relative;
+  }
+  .search-wrap input {
+    width: 100%; padding: 14px 48px 14px 20px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+    border-radius: 14px; outline: none;
+    color: #fff; font-size: 15px;
+    transition: border-color .2s, background .2s;
+  }
+  .search-wrap input:focus {
+    border-color: #818cf8; background: rgba(255,255,255,.12);
+  }
+  .search-wrap input::placeholder { color: #71717a; }
+  .search-wrap .s-icon {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    color: #71717a; font-size: 18px; pointer-events: none;
+  }
+  .search-empty {
+    display: none; text-align: center; color: #8b8d94; padding: 60px 0;
+    font-size: 15px;
+  }
+  .search-empty .big { font-size: 44px; margin-bottom: 14px; }
+
+  /* 置顶模式开关 */
+  .topbar {
+    max-width: 1400px; margin: 0 auto 10px; padding: 0 5%;
+    display: flex; justify-content: flex-end; align-items: center; gap: 10px;
+  }
+  .topbar label {
+    font-size: 13px; color: #a1a1aa; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    user-select: none;
+  }
+  .topbar .switch {
+    position: relative; width: 40px; height: 22px;
+    background: #3a3b41; border-radius: 20px; transition: background .2s;
+  }
+  .topbar .switch::after {
+    content: ""; position: absolute; top: 3px; left: 3px;
+    width: 16px; height: 16px; background: #fff; border-radius: 50%;
+    transition: left .2s;
+  }
+  .topbar input:checked + .switch { background: #6366f1; }
+  .topbar input:checked + .switch::after { left: 21px; }
+  .topbar input { display: none; }
+  .badge-star {
+    display: inline-block; margin-left: 4px; font-size: 11px;
+    color: #fbbf24;
+  }
+
+  .container { padding: 0 5%; max-width: 1400px; margin: 0 auto; }
+  h2.section {
+    font-size: 20px; font-weight: 700; margin: 50px 0 8px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  h2.section .emoji { font-size: 26px; }
+  h2.section .count {
+    background: rgba(255,255,255,.1); color: #c7c7cc; font-size: 12px;
+    padding: 3px 10px; border-radius: 20px; font-weight: 400;
+  }
+  .section-desc { color: #8b8d94; font-size: 13px; margin-bottom: 20px; padding-left: 38px; }
+  h3.sub { font-size: 14px; color: #a1a1aa; margin: 25px 0 12px; padding-left: 38px; font-weight: 600; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 20px 14px;
+    padding-left: 38px;
+  }
+  @media (max-width: 600px) {
+    .grid { padding-left: 0; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); }
+    .section-desc, h3.sub { padding-left: 0; }
+  }
+  a.card {
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 9px;
+    padding: 10px 4px; border-radius: 14px;
+    transition: background .2s, transform .2s;
+    position: relative;
+  }
+  a.card:hover { background: rgba(255,255,255,.05); transform: translateY(-3px); }
+  .icon {
+    width: 62px; height: 62px; border-radius: 16px;
+    background: linear-gradient(145deg, #2e2f34, #26272c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
+    transition: transform .2s;
+    overflow: hidden; position: relative;
+  }
+  .icon img { width: 32px; height: 32px; border-radius: 6px; position: absolute; z-index: 2; }
+  .icon .emoji { z-index: 1; opacity: .9; }
+  a.card:hover .icon { transform: scale(1.08); }
+  .name { font-size: 12.5px; color: #d4d4d8; text-align: center; word-break: break-all; line-height: 1.3; }
+  a.card:hover .name { color: #fff; }
+  /* 置顶角标 */
+  .freq-badge {
+    position: absolute; top: 2px; right: 8px; z-index: 3;
+    font-size: 11px; color: #fbbf24; display: none;
+  }
+  a.card.pinned .freq-badge { display: block; }
+  .divider { border-top: 1px solid rgba(255,255,255,.06); margin: 50px 5% 0; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>📌 我的导航</h1>
+  <p>全球顶尖公司 · 海外 & 国产 AI · 流媒体 · 工具一站式入口</p>
+
+  <!-- 搜索框 -->
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="🔍 输入名称或关键词，实时过滤（如：AI、Google、测速）">
+    <span class="s-icon">⌕</span>
+  </div>
+
+  <div class="stats">
+    <span class="stat"><b id="groupCount">10</b>大分区</span>
+    <span class="stat"><b id="total">0</b>精选站点</span>
+    <span class="stat"><b>2025</b>持续更新</span>
+  </div>
+</div>
+
+<!-- 使用频率置顶开关 -->
+<div class="topbar">
+  <label>
+    <input type="checkbox" id="pinToggle">
+    <span class="switch"></span>
+    ⭐ 常用置顶（按点击次数自动排序）
+  </label>
+</div>
+
+<div class="search-empty" id="empty">
+  <div class="big">🔍</div>
+  没有匹配的站点，换个关键词试试
+</div>
+
+<div class="container" id="app"></div>
+
+<script>
+const data = [
+  { section: "海外 AI", emoji: "🤖", desc: "全球最顶尖的海外 AI 公司与产品", subs: [
+      { sub: "AI 大模型 / 助手", items: [
+        { n:"ChatGPT", u:"https://chatgpt.com", e:"🧠" },
+        { n:"Claude", u:"https://claude.ai", e:"📜" },
+        { n:"Microsoft Copilot", u:"https://copilot.microsoft.com", e:"🪟" },
+        { n:"Grok (xAI)", u:"https://grok.com", e:"🛰️" },
+        { n:"Meta AI", u:"https://www.meta.ai", e:"♾️" },
+        { n:"Mistral AI", u:"https://mistral.ai", e:"🌬️" },
+        { n:"Poe", u:"https://poe.com", e:"🎭" },
+        { n:"NotebookLM", u:"https://notebooklm.google.com", e:"📓" },
+      ]},
+      { sub: "AI 搜索 / 研究", items: [
+        { n:"Perplexity", u:"https://www.perplexity.ai", e:"🔎" },
+        { n:"Elicit", u:"https://elicit.com", e:"📚" },
+        { n:"Hugging Face", u:"https://huggingface.co", e:"🤗" },
+        { n:"xAI", u:"https://x.ai", e:"✖️" },
+      ]},
+      { sub: "AI 图像 / 视频 / 音频", items: [
+        { n:"Midjourney", u:"https://www.midjourney.com", e:"🖼️" },
+        { n:"Runway", u:"https://runwayml.com", e:"🎬" },
+        { n:"ElevenLabs", u:"https://elevenlabs.io", e:"🔊" },
+        { n:"Suno", u:"https://suno.com", e:"🎵" },
+        { n:"HeyGen", u:"https://www.heygen.com", e:"🧑‍💼" },
+        { n:"Leonardo AI", u:"https://leonardo.ai", e:"🎨" },
+        { n:"Stability AI", u:"https://stability.ai", e:"🌊" },
+        { n:"Luma AI", u:"https://lumalabs.ai", e:"💡" },
+      ]},
+      { sub: "AI 编程 / 开发", items: [
+        { n:"Cursor", u:"https://cursor.com", e:"📂" },
+        { n:"GitHub Copilot", u:"https://github.com/features/copilot", e:"🐙" },
+        { n:"Windsurf", u:"https://windsurf.com", e:"🏄" },
+        { n:"Replit", u:"https://replit.com", e:"⌨️" },
+        { n:"v0 (Vercel)", u:"https://v0.dev", e:"▲" },
+      ]},
+  ]},
+  { section: "国产 AI", emoji: "🇨🇳", desc: "国内主流 AI 对话、搜索、视频与编程工具", subs: [
+      { sub: "", items: [
+        { n:"DeepSeek", u:"https://chat.deepseek.com", e:"🐋" },
+        { n:"Kimi", u:"https://kimi.moonshot.cn", e:"🌙" },
+        { n:"豆包", u:"https://www.doubao.com", e:"🥟" },
+        { n:"通义千问", u:"https://www.tongyi.com", e:"✨" },
+        { n:"文心一言", u:"https://yiyan.baidu.com", e:"💭" },
+        { n:"智谱清言", u:"https://chatglm.cn", e:"🧠" },
+        { n:"腾讯元宝", u:"https://yuanbao.tencent.com", e:"💰" },
+        { n:"讯飞星火", u:"https://xinghuo.xfyun.cn", e:"🔥" },
+        { n:"秘塔AI搜索", u:"https://metaso.cn", e:"🔍" },
+        { n:"海螺AI", u:"https://hailuoai.video", e:"🐚" },
+        { n:"即梦 AI", u:"https://jimeng.jianying.com", e:"🎨" },
+        { n:"可灵 AI", u:"https://app.klingai.com/cn", e:"🎬" },
+        { n:"通义万相", u:"https://tongyi.aliyun.com/wanxiang", e:"🌌" },
+        { n:"通义灵码", u:"https://lingma.aliyun.com", e:"💻" },
+        { n:"CodeGeeX", u:"https://codegeex.cn", e:"🤖" },
+        { n:"智谱开放平台", u:"https://bigmodel.cn", e:"🛠️" },
+      ]}
+  ]},
+  { section: "全球顶尖公司", emoji: "🌍", desc: "全球市值 / 行业影响力领先的企业官网", subs: [
+      { sub: "科技巨头", items: [
+        { n:"Apple", u:"https://www.apple.com", e:"🍎" },
+        { n:"Microsoft", u:"https://www.microsoft.com", e:"🪟" },
+        { n:"NVIDIA", u:"https://www.nvidia.com", e:"🟢" },
+        { n:"Amazon", u:"https://www.amazon.com", e:"📦" },
+        { n:"Alphabet", u:"https://abc.xyz", e:"🔵" },
+        { n:"Meta", u:"https://www.meta.com", e:"♾️" },
+        { n:"Tesla", u:"https://www.tesla.com", e:"⚡" },
+        { n:"Broadcom", u:"https://www.broadcom.com", e:"📡" },
+        { n:"台积电 TSMC", u:"https://www.tsmc.com", e:"🔬" },
+        { n:"Samsung", u:"https://www.samsung.com", e:"📱" },
+        { n:"Intel", u:"https://www.intel.com", e:"🔹" },
+        { n:"OpenAI", u:"https://openai.com", e:"🧠" },
+        { n:"Anthropic", u:"https://www.anthropic.com", e:"🤝" },
+        { n:"SpaceX", u:"https://www.spacex.com", e:"🚀" },
+        { n:"Oracle", u:"https://www.oracle.com", e:"🔴" },
+        { n:"IBM", u:"https://www.ibm.com", e:"💼" },
+        { n:"SAP", u:"https://www.sap.com", e:"🏢" },
+        { n:"ASML", u:"https://www.asml.com", e:"⚙️" },
+        { n:"腾讯 Tencent", u:"https://www.tencent.com", e:"🐧" },
+        { n:"阿里巴巴", u:"https://www.alibabagroup.com", e:"🧭" },
+        { n:"华为 Huawei", u:"https://www.huawei.com", e:"📶" },
+      ]},
+      { sub: "金融 / 零售 / 能源", items: [
+        { n:"伯克希尔", u:"https://www.berkshirehathaway.com", e:"💰" },
+        { n:"沙特阿美", u:"https://www.aramco.com", e:"🛢️" },
+        { n:"沃尔玛", u:"https://www.walmart.com", e:"🛒" },
+        { n:"Costco", u:"https://www.costco.com", e:"🏬" },
+        { n:"摩根大通", u:"https://www.jpmorganchase.com", e:"🏦" },
+        { n:"Visa", u:"https://www.visa.com", e:"💳" },
+        { n:"万事达", u:"https://www.mastercard.com", e:"💳" },
+        { n:"埃克森美孚", u:"https://corporate.exxonmobil.com", e:"⛽" },
+      ]},
+      { sub: "汽车与制造", items: [
+        { n:"比亚迪 BYD", u:"https://www.byd.com", e:"🔋" },
+        { n:"大众集团", u:"https://www.volkswagen-group.com", e:"🚙" },
+        { n:"丰田 Toyota", u:"https://www.toyota.com", e:"🚘" },
+        { n:"奔驰", u:"https://www.mercedes-benz.com", e:"⭐" },
+        { n:"宝马 BMW", u:"https://www.bmw.com", e:"🔵" },
+        { n:"现代 Hyundai", u:"https://www.hyundai.com", e:"🇰🇷" },
+        { n:"Stellantis", u:"https://www.stellantis.com", e:"🏭" },
+      ]},
+      { sub: "医药与生命科学", items: [
+        { n:"礼来 Lilly", u:"https://www.lilly.com", e:"💊" },
+        { n:"辉瑞 Pfizer", u:"https://www.pfizer.com", e:"💉" },
+        { n:"强生 J&J", u:"https://www.jnj.com", e:"🩹" },
+        { n:"诺和诺德", u:"https://www.novonordisk.com", e:"🧬" },
+        { n:"罗氏 Roche", u:"https://www.roche.com", e:"⚕️" },
+        { n:"诺华", u:"https://www.novartis.com", e:"🔬" },
+        { n:"阿斯利康", u:"https://www.astrazeneca.com", e:"🧪" },
+        { n:"联合健康", u:"https://www.unitedhealthgroup.com", e:"🏥" },
+      ]},
+  ]},
+  { section: "Google 产品", emoji: "🌀", desc: "Google 全家桶与常用开发 / 学习工具", subs: [
+      { sub: "", items: [
+        { n:"Gemini", u:"https://gemini.google.com", e:"💎" },
+        { n:"Gmail", u:"https://mail.google.com", e:"📧" },
+        { n:"Drive", u:"https://drive.google.com", e:"📁" },
+        { n:"Docs", u:"https://docs.google.com", e:"📄" },
+        { n:"Sheets", u:"https://sheets.google.com", e:"📊" },
+        { n:"Slides", u:"https://slides.google.com", e:"📽️" },
+        { n:"Keep", u:"https://keep.google.com", e:"🗒️" },
+        { n:"Calendar", u:"https://calendar.google.com", e:"📅" },
+        { n:"Translate", u:"https://translate.google.com", e:"🌐" },
+        { n:"Maps", u:"https://maps.google.com", e:"🗺️" },
+        { n:"Photos", u:"https://photos.google.com", e:"🖼️" },
+        { n:"Meet", u:"https://meet.google.com", e:"🎥" },
+        { n:"YouTube", u:"https://www.youtube.com", e:"▶️" },
+        { n:"YT Music", u:"https://music.youtube.com", e:"🎵" },
+        { n:"Google Play", u:"https://play.google.com", e:"🎮" },
+        { n:"Scholar", u:"https://scholar.google.com", e:"🎓" },
+        { n:"Books", u:"https://books.google.com", e:"📚" },
+        { n:"Trends", u:"https://trends.google.com", e:"📈" },
+        { n:"Earth", u:"https://earth.google.com", e:"🌍" },
+        { n:"Colab", u:"https://colab.research.google.com", e:"🧪" },
+        { n:"Analytics", u:"https://analytics.google.com", e:"📊" },
+        { n:"Cloud", u:"https://cloud.google.com", e:"☁️" },
+        { n:"Fonts", u:"https://fonts.google.com", e:"🔤" },
+        { n:"Chrome", u:"https://www.google.com/chrome", e:"🌐" },
+      ]}
+  ]},
+  { section: "支付 / 交易", emoji: "💳", desc: "聚合支付、加密支付与外汇交易平台", subs: [
+      { sub: "", items: [
+        { n:"链动小铺", u:"http://www.ldxp.cn", e:"🛍️" },
+        { n:"PototaPay", u:"https://www.pototapay.com", e:"🍠" },
+        { n:"MotionPay", u:"https://motionpay.net", e:"💸" },
+        { n:"Bitrefill", u:"https://www.bitrefill.com", e:"🪙" },
+        { n:"SEAGM", u:"https://www.seagm.com", e:"🎮" },
+        { n:"TMGM", u:"https://www.tmgmcn.com", e:"🔰" },
+        { n:"Savo", u:"https://savvvo.com", e:"🏦" },
+        { n:"BPay", u:"https://bpay.net", e:"🅿️" },
+        { n:"Coinpay", u:"https://coinpay.cr", e:"🪙" },
+        { n:"PayPal", u:"https://www.paypal.com", e:"🅿️" },
+      ]}
+  ]},
+  { section: "加密货币 / 投资", emoji: "📈", desc: "交易所、行情社区与量化工具", subs: [
+      { sub: "", items: [
+        { n:"OKX", u:"https://www.okx.com", e:"⬛" },
+        { n:"Binance", u:"https://www.binance.com", e:"🟡" },
+        { n:"Gate", u:"https://www.gate.io", e:"🔷" },
+        { n:"雪球", u:"https://xueqiu.com", e:"❄️" },
+        { n:"Followme", u:"https://www.followme.com", e:"👥" },
+        { n:"外汇天眼", u:"https://www.fxeye.com", e:"👁️" },
+        { n:"FX110", u:"https://www.fx110.com", e:"🛡️" },
+        { n:"发明者 FMZ", u:"https://www.fmz.com", e:"🤖" },
+        { n:"OneKey", u:"https://onekey.so", e:"🔐" },
+        { n:"XAPO", u:"https://xapo.com", e:"🧱" },
+        { n:"RootData", u:"https://www.rootdata.com", e:"🌱" },
+        { n:"TradingView", u:"https://www.tradingview.com", e:"📈" },
+      ]}
+  ]},
+  { section: "网络工具", emoji: "🛠️", desc: "测速、IP / DNS 检测与云服务", subs: [
+      { sub: "", items: [
+        { n:"CF 测速", u:"https://speed.cloudflare.com", e:"⚡" },
+        { n:"Fast", u:"https://fast.com", e:"🚀" },
+        { n:"SpeedTest.net", u:"https://www.speedtest.net", e:"📶" },
+        { n:"SpeedTest.cn", u:"https://www.speedtest.cn", e:"🇨🇳" },
+        { n:"中科大测速", u:"https://speedtest.ustc.edu.cn", e:"🎓" },
+        { n:"Net.Coffee", u:"https://net.coffee", e:"☕" },
+        { n:"iplark", u:"https://iplark.com", e:"🐧" },
+        { n:"Ping0", u:"https://ping0.cc", e:"⬆️" },
+        { n:"DNS检测", u:"https://dnschecker.org", e:"🌐" },
+        { n:"BrowserLeaks", u:"https://browserleaks.com", e:"🕵️" },
+        { n:"IPLeak", u:"https://ipleak.net", e:"💧" },
+        { n:"IPW.cn", u:"https://ipw.cn", e:"📡" },
+        { n:"Test-IPv6", u:"https://test-ipv6.com", e:"6️⃣" },
+        { n:"IPv6.Google", u:"https://ipv6.google.com", e:"🌐" },
+        { n:"Vultr", u:"https://www.vultr.com", e:"☁️" },
+      ]}
+  ]},
+  { section: "国际 / 流媒体", emoji: "🎬", desc: "海外主流视频、音乐与社交平台", subs: [
+      { sub: "", items: [
+        { n:"Netflix", u:"https://www.netflix.com", e:"🎬" },
+        { n:"Disney+", u:"https://www.disneyplus.com", e:"🏰" },
+        { n:"HBO Max", u:"https://www.max.com", e:"🎥" },
+        { n:"TikTok", u:"https://www.tiktok.com", e:"🎵" },
+        { n:"Spotify", u:"https://open.spotify.com", e:"🎧" },
+        { n:"TED", u:"https://www.ted.com", e:"🎤" },
+        { n:"Instagram", u:"https://www.instagram.com", e:"📷" },
+        { n:"BBC", u:"https://www.bbc.com", e:"📺" },
+        { n:"Bing", u:"https://www.bing.com", e:"🅱️" },
+        { n:"维基百科", u:"https://zh.wikipedia.org", e:"📖" },
+      ]}
+  ]},
+  { section: "新闻 / 中文内容", emoji: "📰", desc: "国内外新闻与中文内容社区", subs: [
+      { sub: "", items: [
+        { n:"DW 中文", u:"https://www.dw.com/zh", e:"🌍" },
+        { n:"纽约时报", u:"https://www.nytimes.com", e:"🗞️" },
+        { n:"CNN", u:"https://edition.cnn.com", e:"🔴" },
+        { n:"Baidu", u:"https://www.baidu.com", e:"🐾" },
+        { n:"微博", u:"https://weibo.com", e:"👀" },
+        { n:"今日头条", u:"https://www.toutiao.com", e:"📄" },
+        { n:"知乎", u:"https://www.zhihu.com", e:"🧠" },
+        { n:"抖音", u:"https://www.douyin.com", e:"🎶" },
+        { n:"Bilibili", u:"https://www.bilibili.com", e:"📺" },
+        { n:"小红书", u:"https://www.xiaohongshu.com", e:"📕" },
+        { n:"视频号", u:"https://channels.weixin.qq.com", e:"🎬" },
+        { n:"豆瓣", u:"https://www.douban.com", e:"🫘" },
+        { n:"懂车帝", u:"https://www.dongchedi.com", e:"🚗" },
+      ]}
+  ]},
+  { section: "海外华人 / 台湾 OTT", emoji: "🌏", desc: "面向海外华人的影视与直播平台", subs: [
+      { sub: "", items: [
+        { n:"泥视频", u:"https://www.nivod.cc", e:"🎞️" },
+        { n:"爱一凡", u:"https://www.iyf.tv", e:"🍿" },
+        { n:"4gtv", u:"https://www.4gtv.tv", e:"🔉" },
+        { n:"Ofiii", u:"https://www.ofiii.com", e:"📶" },
+        { n:"MeWatch", u:"https://www.mewatch.sg", e:"🇸🇬" },
+        { n:"FainTV", u:"https://www.faintv.com.tw", e:"📺" },
+      ]}
+  ]},
+];
+
+/* ============ 点击计数（localStorage） ============ */
+const FREQ_KEY = "nav_freq_v1";
+let freq = {};
+try { freq = JSON.parse(localStorage.getItem(FREQ_KEY) || "{}"); } catch(e) {}
+function saveFreq() { localStorage.setItem(FREQ_KEY, JSON.stringify(freq)); }
+function getFreq(u) { return freq[u] || 0; }
+
+/* ============ 构建 DOM ============ */
+const app = document.getElementById("app");
+const groupEls = []; // { el, name, grids: [{gridEl, cards: [{a, n, u, domain}]}] }
+let total = 0;
+
+data.forEach(group => {
+  const count = group.subs.reduce((a,s)=>a+s.items.length,0);
+  total += count;
+
+  const frag = document.createDocumentFragment();
+  const h2 = document.createElement("h2");
+  h2.className = "section";
+  h2.innerHTML = `<span class="emoji">${group.emoji}</span>${group.section} <span class="count">${count}</span>`;
+  frag.appendChild(h2);
+
+  if (group.desc) {
+    const p = document.createElement("p");
+    p.className = "section-desc";
+    p.textContent = group.desc;
+    frag.appendChild(p);
+  }
+
+  const grids = [];
+  group.subs.forEach(s => {
+    if (s.sub) {
+      const h3 = document.createElement("h3");
+      h3.className = "sub";
+      h3.textContent = "▸ " + s.sub;
+      frag.appendChild(h3);
+    }
+    const grid = document.createElement("div");
+    grid.className = "grid";
+    const cards = [];
+    s.items.forEach(it => {
+      const a = document.createElement("a");
+      a.className = "card";
+      a.href = it.u;
+      a.target = "_blank";
+      a.rel = "noopener";
+      const domain = it.u.replace(/^https?:\/\//, "").split("/")[0];
+      a.innerHTML = `
+        <span class="freq-badge">⭐</span>
+        <div class="icon">
+          <span class="emoji">${it.e}</span>
+          <img src="https://www.google.com/s2/favicons?domain=${domain}&sz=64"
+               onerror="this.remove()" alt="">
+        </div>
+        <div class="name">${it.n}</div>`;
+      // 点击计数
+      a.addEventListener("click", () => {
+        freq[it.u] = getFreq(it.u) + 1;
+        saveFreq();
+        applyPin();
+      });
+      cards.push({ a, n: it.n, u: it.u, domain });
+      grid.appendChild(a);
+    });
+    grids.push({ grid, cards, subName: s.sub || "" });
+    frag.appendChild(grid);
+  });
+
+  const d = document.createElement("div");
+  d.className = "divider";
+  frag.appendChild(d);
+
+  app.appendChild(frag);
+  groupEls.push({ frag, name: group.section, grids });
+});
+
+document.getElementById("total").textContent = total;
+
+/* ============ 常用置顶：组内按点击次数排序 + 星标 ============ */
+const pinToggle = document.getElementById("pinToggle");
+function applyPin() {
+  if (!pinToggle.checked) {
+    // 恢复原始顺序
+    groupEls.forEach(g => {
+      g.grids.forEach(gr => {
+        gr.cards.sort((x, y) => gr.cards.indexOf(x) - gr.cards.indexOf(y)); // no-op
+        gr.cards.forEach(c => { c.a.classList.remove("pinned"); gr.grid.appendChild(c.a); });
+      });
+    });
+    return;
+  }
+  groupEls.forEach(g => {
+    g.grids.forEach(gr => {
+      gr.cards.sort((x, y) => getFreq(y.u) - getFreq(x.u));
+      gr.cards.forEach(c => {
+        c.a.classList.toggle("pinned", getFreq(c.u) > 0);
+        gr.grid.appendChild(c.a);
+      });
+    });
+  });
+}
+pinToggle.addEventListener("change", applyPin);
+
+/* ============ 实时搜索过滤 ============ */
+const searchInput = document.getElementById("search");
+const emptyBox = document.getElementById("empty");
+searchInput.addEventListener("input", () => {
+  const q = searchInput.value.trim().toLowerCase();
+  let anyVisible = false;
+
+  groupEls.forEach(g => {
+    let groupVisible = false;
+    g.grids.forEach(gr => {
+      let gridVisible = false;
+      gr.cards.forEach(c => {
+        const hit = !q || c.n.toLowerCase().includes(q) || c.domain.includes(q);
+        c.a.style.display = hit ? "" : "none";
+        if (hit) { gridVisible = true; groupVisible = true; anyVisible = true; }
+      });
+      gr.grid.style.display = gridVisible ? "" : "none";
+    });
+    // 隐藏整组标题与描述
+    const sectionEl = g.frag;
+    // 用 closest 找到组内首个 h2（frag 已插入 app）
+  });
+
+  // 隐藏没有可见卡片的分区标题
+  document.querySelectorAll("h2.section").forEach(h2 => {
+    let el = h2.nextElementSibling, visible = false;
+    while (el && !el.classList.contains("divider")) {
+      if ((el.classList.contains("grid") && el.style.display !== "none")) visible = true;
+      el = el.nextElementSibling;
+    }
+    h2.style.display = visible ? "" : "none";
+    // 同时隐藏相邻的 desc / sub
+    let e2 = h2.nextElementSibling;
+    while (e2 && !e2.classList.contains("divider")) {
+      if (e2.classList.contains("section-desc") || e2.classList.contains("sub"))
+        e2.style.display = visible ? "" : "none";
+      e2 = e2.nextElementSibling;
+    }
+  });
+
+  emptyBox.style.display = anyVisible ? "none" : "block";
+});
+</script>
+
+</body>
+</html>
