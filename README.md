@@ -9,7 +9,7 @@
 ![Dependencies](https://img.shields.io/badge/依赖-零-blue)
 ![Deploy](https://img.shields.io/badge/部署-Cloudflare%20Pages-F38020?logo=cloudflare)
 
-**[🌐 在线演示]([https://your-site.pages.dev](https://ubiquitous-tribble-q7gvqpj5rq9cxx4r-4173.app.github.dev/))** · [快速开始](#-快速开始) · [部署指南](#-部署到-cloudflare-pages) · [自定义](#-自定义指南)
+**[🌐 在线演示](https://ubiquitous-tribble-q7gvqpj5rq9cxx4r-4173.app.github.dev/)** · [快速开始](#-快速开始) · [部署指南](#-部署到-cloudflare-pages) · [自定义](#-自定义指南)
 
 </div>
 
