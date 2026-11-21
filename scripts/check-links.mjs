@@ -126,7 +126,8 @@ const hosts = [...new Set(urls
 
 console.log(`证书检查：${hosts.length} 个域名…`);
 const certs = await mapLimit(hosts, CERT_CONCURRENCY, checkCert);
-const certIssues = certs.filter(c => c.days !== null && c.days < 30);
+const CERT_WARN_DAYS = 7;
+const certIssues = certs.filter(c => c.days !== null && c.days < CERT_WARN_DAYS);
 
 const now = new Date().toISOString().replace("T", " ").slice(0, 19) + " UTC";
 const table = (list, note) => {
@@ -145,7 +146,7 @@ let report = `## 站点健康检查报告
 - 服务器错误（5xx）：**${serverError.length}**
 - 无法连接（网络 / 地域限制，不一定失效）：**${unreachable.length}**
 - 疑似反爬（需人工确认）：**${blocked.length}**
-- 证书 30 天内到期或异常：**${certIssues.length}**
+- 证书 7 天内到期或已过期：**${certIssues.length}**
 
 `;
 

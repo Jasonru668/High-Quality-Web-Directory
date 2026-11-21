@@ -108,7 +108,7 @@ python -m http.server 8000
 `.github/workflows/link-check.yml` 每周一 02:00 UTC（北京时间周一 10:00）自动跑 `scripts/check-links.mjs`：
 
 - 提取 `index.html` 里的全部外链，并发探测状态码
-- 检查每个 HTTPS 域名的证书剩余有效期（<30 天告警）
+- 检查每个 HTTPS 域名的证书剩余有效期（<7 天或已过期才告警，避免 CDN 短周期证书误报）
 - 结果分四档：**确认失效（404/410）**、**服务器错误（5xx）**、**无法连接（地域限制，不等于失效）**、**疑似反爬**
 - 存在「确认失效 / 5xx / 证书告警」时，自动创建带 `link-check` 标签的 Issue；已有则追加评论，不会重复开单
 - 本地手动跑：`node scripts/check-links.mjs`，生成 `link-report.md`
