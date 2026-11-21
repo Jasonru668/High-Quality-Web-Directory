@@ -1,0 +1,74 @@
+name: Link Health Check
+
+on:
+  schedule:
+    # 每周一 02:00 UTC（北京时间周一 10:00）
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check links & certificates
+        run: node scripts/check-links.mjs || true
+
+      - name: Show summary
+        run: cat link-summary.json && head -n 40 link-report.md
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-report
+          path: |
+            link-report.md
+            link-summary.json
+          retention-days: 30
+
+      - name: Ensure label exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh label create link-check --color FFA500 --description "自动链接与证书检查" || true
+
+      - name: Create or update issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          actionable=$(node -p "require('./link-summary.json').actionable || 0")
+          gone=$(node -p "require('./link-summary.json').notFound || 0")
+          err=$(node -p "require('./link-summary.json').serverError || 0")
+          cert=$(node -p "require('./link-summary.json').certIssues || 0")
+          if [ "$actionable" -eq 0 ]; then
+            echo "本次无确认失效、无服务器错误、无证书告警，跳过 Issue"
+            exit 0
+          fi
+          existing=$(gh issue list --label link-check --state open --limit 1 --json number -q '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file link-report.md
+            echo "已追加评论到 Issue #$existing"
+          else
+            gh issue create \
+              --title "站点健康检查 $(date -u +%F)（失效 ${gone} · 5xx ${err} · 证书 ${cert}）" \
+              --body-file link-report.md \
+              --label link-check
+          fi
+
+      - name: Clean generated files
+        if: always()
+        run: rm -f link-report.md link-summary.json

@@ -10,6 +10,8 @@
 <meta property="og:title" content="我的导航 · Liquid Glass">
 <meta property="og:description" content="11 大分区、200+ 精选站点，一页直达。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236fb3ff'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='%230a0d14'/%3E%3Ccircle cx='32' cy='32' r='15' fill='url(%23g)' opacity='.9'/%3E%3C/svg%3E">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -305,9 +307,162 @@
     .orb, .hero .stat, a.card, .icon { animation: none !important; transition: none !important; }
     a.card::before { display: none; }
   }
+
+  /* ================= 工具栏按钮 ================= */
+  .topbar { gap: 12px; flex-wrap: wrap; align-items: center; }
+  .ghost-btn, .mini-btn {
+    font: inherit; cursor: pointer;
+    color: var(--text-secondary);
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    transition: all .25s ease;
+  }
+  .ghost-btn { padding: 12px 20px; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
+  .ghost-btn:hover, .mini-btn:hover { background: var(--glass-bg-hover); color: #fff; transform: translateY(-1px); }
+  .ghost-btn:focus-visible, .mini-btn:focus-visible, .fab button:focus-visible {
+    outline: 2px solid rgba(111,179,255,.8); outline-offset: 2px;
+  }
+  .mini-btn { padding: 6px 14px; font-size: 12px; margin-left: auto; }
+  h2.section .mini-btn { font-weight: 400; }
+
+  /* ================= 回到顶部 / 直达底部 ================= */
+  .fab {
+    position: fixed; right: 18px; bottom: 22px; z-index: 8;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .fab button {
+    width: 46px; height: 46px; border-radius: 50%;
+    font-size: 18px; line-height: 1; cursor: pointer;
+    color: var(--text-primary);
+    background: rgba(255,255,255,.14);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 10px 26px rgba(0,0,0,.35);
+    transition: opacity .25s ease, transform .25s ease, background .25s ease;
+  }
+  .fab button:hover { background: rgba(255,255,255,.24); transform: translateY(-2px); }
+  .fab button[disabled] { opacity: 0; transform: translateY(6px); pointer-events: none; }
+
+  /* ================= 浅色主题 ================= */
+  html[data-theme="light"] { color-scheme: light; }
+  html[data-theme="light"] body { background: #f1f4fb; color: #0f172a; }
+  html[data-theme="light"] .orb { opacity: .26; }
+  html[data-theme="light"] body::after { opacity: .015; }
+  html[data-theme="light"] .hero h1 {
+    background: linear-gradient(135deg,#0f172a 0%,#2452d6 45%,#7c3aed 85%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  html[data-theme="light"] .hero p,
+  html[data-theme="light"] .hint,
+  html[data-theme="light"] .section-desc,
+  html[data-theme="light"] footer,
+  html[data-theme="light"] .search-empty { color: #5b6b82; }
+  html[data-theme="light"] .badge,
+  html[data-theme="light"] .stat,
+  html[data-theme="light"] .topbar label,
+  html[data-theme="light"] .ghost-btn,
+  html[data-theme="light"] .mini-btn,
+  html[data-theme="light"] .search-wrap input {
+    background: rgba(255,255,255,.78);
+    border-color: rgba(15,23,42,.12);
+    box-shadow: inset 0 1px 0 #fff, 0 10px 30px rgba(15,23,42,.07);
+    color: #334155;
+  }
+  html[data-theme="light"] .hero .stat b { color: #0f172a; }
+  html[data-theme="light"] .search-wrap input { color: #0f172a; }
+  html[data-theme="light"] .search-wrap input::placeholder { color: #9aa8bd; }
+  html[data-theme="light"] .search-wrap input:focus {
+    border-color: rgba(37,99,235,.5);
+    box-shadow: inset 0 1px 0 #fff, 0 0 0 4px rgba(37,99,235,.1), 0 16px 40px rgba(15,23,42,.1);
+  }
+  html[data-theme="light"] .topbar .switch { background: rgba(15,23,42,.14); }
+  html[data-theme="light"] .panel {
+    background: rgba(255,255,255,.66);
+    border-color: rgba(15,23,42,.1);
+    box-shadow: inset 0 1px 0 #fff, 0 18px 50px rgba(15,23,42,.07);
+  }
+  html[data-theme="light"] .panel:hover { background: rgba(255,255,255,.82); }
+  html[data-theme="light"] .panel::before { background: linear-gradient(90deg, transparent, rgba(37,99,235,.28), transparent); }
+  html[data-theme="light"] a.card { background: rgba(255,255,255,.62); border-color: rgba(15,23,42,.08); }
+  html[data-theme="light"] a.card:hover {
+    background: #fff; border-color: rgba(37,99,235,.35);
+    box-shadow: 0 16px 36px rgba(15,23,42,.12), inset 0 1px 0 #fff;
+  }
+  html[data-theme="light"] .icon {
+    background: linear-gradient(145deg,#ffffff,#e6ebf5);
+    box-shadow: inset 0 1px 0 #fff, 0 6px 16px rgba(15,23,42,.1);
+  }
+  html[data-theme="light"] .name { color: #4d5c73; }
+  html[data-theme="light"] a.card:hover .name { color: #0f172a; }
+  html[data-theme="light"] h2.section { color: #0f172a; }
+  html[data-theme="light"] h3.sub { color: #334155; }
+  html[data-theme="light"] .count {
+    background: rgba(15,23,42,.06); border-color: rgba(15,23,42,.12); color: #5b6b82;
+  }
+  html[data-theme="light"] .hint kbd { background: #fff; border-color: rgba(15,23,42,.16); color: #475569; }
+  html[data-theme="light"] mark {
+    background: linear-gradient(135deg,#bfdbfe,#ddd6fe); color: #1e293b;
+  }
+  html[data-theme="light"] .fab button {
+    background: rgba(255,255,255,.85); color: #0f172a;
+    border-color: rgba(15,23,42,.12);
+    box-shadow: 0 10px 26px rgba(15,23,42,.12);
+  }
+  html[data-theme="light"] .fab button:hover { background: #fff; }
+  html[data-theme="light"] a.card.pinned { background: rgba(251,191,36,.14); border-color: rgba(234,179,8,.4); }
+
+  /* ================= 导出弹层 / 轻提示 ================= */
+  .modal {
+    position: fixed; inset: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    background: rgba(4,6,12,.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .modal[hidden] { display: none; }
+  .modal-card {
+    width: min(460px, 100%);
+    padding: 26px 26px 22px;
+    border-radius: 22px;
+    background: rgba(22,26,36,.92);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    color: var(--text-primary);
+  }
+  html[data-theme="light"] .modal-card { background: #fff; color: #0f172a; border-color: rgba(15,23,42,.12); }
+  .modal-card h3 { font-size: 17px; margin-bottom: 8px; }
+  .modal-card p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 18px; }
+  html[data-theme="light"] .modal-card p { color: #5b6b82; }
+  .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+  .modal-actions .ghost-btn { justify-content: center; }
+  #modalClose { margin: 16px 0 0; align-self: center; display: block; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 34px; z-index: 30;
+    transform: translate(-50%, 12px);
+    max-width: min(90vw, 420px);
+    padding: 12px 20px; border-radius: 999px;
+    font-size: 13.5px; text-align: center;
+    color: var(--text-primary);
+    background: rgba(20,24,34,.92);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 16px 40px rgba(0,0,0,.4);
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  html[data-theme="light"] .toast {
+    background: #fff; color: #0f172a; border-color: rgba(15,23,42,.12);
+  }
 </style>
 </head>
-<body>
+<body id="top">
 
 <div class="bg-orbs">
   <div class="orb"></div><div class="orb"></div><div class="orb"></div>
@@ -323,6 +478,9 @@
     <span class="s-icon">⌕</span>
   </div>
   <p class="hint">按 <kbd>/</kbd> 聚焦搜索 · <kbd>Esc</kbd> 清空 · 点击卡片自动记录使用频率</p>
+  <p class="hint" style="margin-top:10px;">
+    <button class="ghost-btn" id="btnJumpBottom" type="button">⬇ 直达底部分区</button>
+  </p>
   <div class="stats" style="margin-top: 26px;">
     <span class="stat"><b id="groupCount">11</b>大分区</span>
     <span class="stat"><b id="total">0</b>精选站点</span>
@@ -336,6 +494,10 @@
     <span class="switch"></span>
     ⭐ 常用置顶（按点击自动排序）
   </label>
+  <button class="ghost-btn" id="themeToggle" type="button" aria-label="切换明暗主题">🌙 深色</button>
+  <button class="ghost-btn" id="btnImport" type="button">⬆ 导入书签</button>
+  <button class="ghost-btn" id="btnExport" type="button">⬇ 导出</button>
+  <input type="file" id="fileInput" accept=".html,.htm,.json" hidden>
 </div>
 
 <div class="search-empty" id="empty">
@@ -351,9 +513,41 @@
   </div>
 </div>
 
+<div class="container" id="customWrap" style="display:none">
+  <div class="panel">
+    <h2 class="section"><span class="emoji">📥</span>我的书签 <span class="count" id="customCount">0</span>
+      <button class="mini-btn" id="btnClearCustom" type="button">清空</button>
+    </h2>
+    <p class="section-desc">从浏览器导入的书签，按文件夹分组，仅保存在本机浏览器</p>
+    <div id="customBody"></div>
+  </div>
+</div>
+
 <div class="container" id="app"></div>
 
-<footer>© 2026 · Made with Liquid Glass Style · 数据存于本地浏览器</footer>
+<footer>
+  <div>© 2026 · Made with Liquid Glass Style · 数据存于本地浏览器</div>
+  <div style="margin-top:12px;">
+    <a class="ghost-btn" href="#top" id="footerTop" style="text-decoration:none;">↑ 回到顶部</a>
+  </div>
+</footer>
+
+<div class="fab" aria-label="页面快捷导航">
+  <button id="btnTop" type="button" title="回到顶部" aria-label="回到顶部">↑</button>
+  <button id="btnBottom" type="button" title="直达底部" aria-label="直达底部">↓</button>
+</div>
+
+<div class="modal" id="exportModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h3 id="modalTitle">导出格式</h3>
+    <p>JSON 可回导到本页（含分区与我的书签）；HTML 是标准书签文件，可直接导入 Chrome / Edge / Safari。</p>
+    <div class="modal-actions">
+      <button class="ghost-btn" data-fmt="json" type="button">JSON 备份（可回导）</button>
+      <button class="ghost-btn" data-fmt="html" type="button">浏览器书签 HTML</button>
+    </div>
+    <button class="mini-btn" id="modalClose" type="button">关闭</button>
+  </div>
+</div>
 
 <script>
 const data = [
@@ -863,9 +1057,13 @@ function applySearch() {
   const q = searchInput.value.trim().toLowerCase();
   let anyVisible = false;
 
-  if (q) recentWrap.style.display = "none";
+  if (q) {
+    recentWrap.style.display = "none";
+    customWrap.style.display = "none";
+  }
 
-  groupEls.forEach(g => {
+  const groups = customGroup ? groupEls.concat([customGroup]) : groupEls;
+  groups.forEach(g => {
     let panelVisible = false;
     g.grids.forEach(gr => {
       let gridVisible = false;
@@ -897,6 +1095,7 @@ function applySearch() {
 
   emptyBox.style.display = anyVisible ? "none" : "block";
   if (!q && recent.length) recentWrap.style.display = "";
+  if (!q && custom.length) customWrap.style.display = "";
 }
 
 searchInput.addEventListener("input", applySearch);
@@ -914,6 +1113,262 @@ document.addEventListener("keydown", e => {
     searchInput.blur();
   }
 });
+
+/* ================= 明暗主题 ================= */
+const THEME_KEY = "nav_theme_v1";
+const themeToggle = document.getElementById("themeToggle");
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+
+function applyTheme(theme) {
+  const root = document.documentElement;
+  if (theme === "light") root.dataset.theme = "light";
+  else root.removeAttribute("data-theme");
+  themeToggle.textContent = theme === "light" ? "☀️ 浅色" : "🌙 深色";
+  if (themeMeta) themeMeta.setAttribute("content", theme === "light" ? "#f1f4fb" : "#0a0d14");
+}
+
+let startTheme = "dark";
+try { startTheme = localStorage.getItem(THEME_KEY) || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"); } catch (e) {}
+applyTheme(startTheme);
+
+themeToggle.addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  applyTheme(next);
+  try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+});
+
+/* ================= 轻提示 ================= */
+let toastTimer = null;
+function toast(msg) {
+  let box = document.getElementById("toast");
+  if (!box) {
+    box = el("div", "toast");
+    box.id = "toast";
+    document.body.appendChild(box);
+  }
+  box.textContent = msg;
+  box.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => box.classList.remove("show"), 2600);
+}
+
+/* ================= 快捷导航按钮 ================= */
+const btnTop = document.getElementById("btnTop");
+const btnBottom = document.getElementById("btnBottom");
+const btnJumpBottom = document.getElementById("btnJumpBottom");
+const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+const scrollToBottom = () => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+
+btnTop.addEventListener("click", scrollToTop);
+btnBottom.addEventListener("click", scrollToBottom);
+if (btnJumpBottom) btnJumpBottom.addEventListener("click", scrollToBottom);
+document.getElementById("footerTop").addEventListener("click", e => {
+  e.preventDefault();
+  scrollToTop();
+});
+window.addEventListener("scroll", () => {
+  btnTop.disabled = window.scrollY < 300;
+}, { passive: true });
+btnTop.disabled = true;
+
+/* ================= 我的书签（导入 / 导出） ================= */
+const CUSTOM_KEY = "nav_custom_v1";
+let custom = [];
+try {
+  const v = JSON.parse(localStorage.getItem(CUSTOM_KEY) || "[]");
+  if (Array.isArray(v)) custom = v;
+} catch (e) { custom = []; }
+
+const customWrap = document.getElementById("customWrap");
+const customBody = document.getElementById("customBody");
+const customCount = document.getElementById("customCount");
+let customGroup = null;
+
+function renderCustom() {
+  customBody.textContent = "";
+  if (!custom.length) {
+    customWrap.style.display = "none";
+    customGroup = null;
+    return;
+  }
+  customWrap.style.display = "";
+  customCount.textContent = custom.length;
+
+  const folders = new Map();
+  custom.forEach(item => {
+    const f = item.f || "导入的书签";
+    if (!folders.has(f)) folders.set(f, []);
+    folders.get(f).push(item);
+  });
+
+  const frag = document.createDocumentFragment();
+  const grids = [];
+  folders.forEach((items, folder) => {
+    const h3 = el("h3", "sub");
+    h3.textContent = folder;
+    frag.appendChild(h3);
+    const grid = el("div", "grid");
+    const cards = [];
+    items.forEach(it => {
+      const card = makeCard({ n: it.n, u: it.u, e: it.e || "🔖" });
+      cards.push(card);
+      grid.appendChild(card.a);
+    });
+    frag.appendChild(grid);
+    grids.push({ grid, cards });
+  });
+  customBody.appendChild(frag);
+  customGroup = { panel: customWrap, grids };
+}
+
+function saveCustom() { persist(CUSTOM_KEY, custom); }
+
+function addCustomItems(items) {
+  const seen = new Set(custom.map(i => i.u));
+  let added = 0;
+  items.forEach(i => {
+    if (!/^https?:/i.test(i.u) || seen.has(i.u)) return;
+    seen.add(i.u);
+    custom.push({ n: i.n, u: i.u, e: "🔖", f: i.f || "导入的书签" });
+    added++;
+  });
+  if (added) {
+    saveCustom();
+    renderCustom();
+    applySearch();
+  }
+  return added;
+}
+
+document.getElementById("btnClearCustom").addEventListener("click", () => {
+  if (!custom.length) return;
+  if (!confirm("确定清空已导入的 " + custom.length + " 个书签？")) return;
+  custom = [];
+  saveCustom();
+  renderCustom();
+  toast("已清空导入的书签");
+});
+
+const fileInput = document.getElementById("fileInput");
+document.getElementById("btnImport").addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", async () => {
+  const file = fileInput.files && fileInput.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    let added = 0;
+    if (/\.json$/i.test(file.name)) {
+      const json = JSON.parse(text);
+      if (Array.isArray(json.custom)) added += addCustomItems(json.custom);
+      const sections = json.sections || json.data || [];
+      const items = [];
+      sections.forEach(sec => (sec.subs || []).forEach(s => (s.items || []).forEach(it => {
+        items.push({ n: it.n, u: it.u, f: sec.section });
+      })));
+      added += addCustomItems(items);
+    } else {
+      const doc = new DOMParser().parseFromString(text, "text/html");
+      let folder = "浏览器书签";
+      const items = [];
+      doc.querySelectorAll("dt").forEach(dt => {
+        const h3 = dt.querySelector("h3");
+        if (h3) {
+          folder = (h3.textContent || "").trim() || folder;
+          return;
+        }
+        const a = dt.querySelector("a[href]");
+        if (!a) return;
+        const url = (a.getAttribute("href") || "").trim();
+        if (!/^https?:/i.test(url)) return;
+        items.push({ n: (a.textContent || "").trim() || domainOf(url), u: url, f: folder });
+      });
+      added += addCustomItems(items);
+    }
+    toast(added ? "已导入 " + added + " 个书签" : "没有新增书签（可能重复或格式不支持）");
+  } catch (err) {
+    toast("导入失败：" + err.message);
+  } finally {
+    fileInput.value = "";
+  }
+});
+
+function download(filename, content, mime) {
+  const blob = new Blob([content], { type: mime + ";charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+function bookmarksHTML() {
+  const esc = s => String(s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const lines = [
+    "<!DOCTYPE NETSCAPE-Bookmark-file-1>",
+    '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">',
+    "<TITLE>Bookmarks</TITLE>",
+    "<H1>Bookmarks</H1>",
+    "<DL><p>"
+  ];
+  data.forEach(sec => {
+    lines.push("  <DT><H3>" + esc(sec.section) + "</H3>", "  <DL><p>");
+    sec.subs.forEach(s => (s.items || []).forEach(it => {
+      lines.push('    <DT><A HREF="' + esc(it.u) + '">' + esc(it.n) + "</A>");
+    }));
+    lines.push("  </DL><p>");
+  });
+  if (custom.length) {
+    lines.push("  <DT><H3>我的书签</H3>", "  <DL><p>");
+    custom.forEach(it => {
+      lines.push('    <DT><A HREF="' + esc(it.u) + '">' + esc(it.n) + "</A>");
+    });
+    lines.push("  </DL><p>");
+  }
+  lines.push("</DL><p>");
+  return lines.join("\n");
+}
+
+const exportModal = document.getElementById("exportModal");
+document.getElementById("btnExport").addEventListener("click", () => {
+  exportModal.hidden = false;
+});
+document.getElementById("modalClose").addEventListener("click", () => { exportModal.hidden = true; });
+exportModal.addEventListener("click", e => {
+  if (e.target === exportModal) exportModal.hidden = true;
+});
+exportModal.querySelectorAll("[data-fmt]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const stamp = new Date().toISOString().slice(0, 10);
+    const fmt = btn.dataset.fmt;
+    if (fmt === "json") {
+      download("my-nav-" + stamp + ".json",
+        JSON.stringify({ version: "1.2", exportedAt: new Date().toISOString(), sections: data, custom }, null, 2),
+        "application/json");
+    } else {
+      download("my-nav-" + stamp + ".html", bookmarksHTML(), "text/html");
+    }
+    exportModal.hidden = true;
+    toast("已生成导出文件");
+  });
+});
+
+/* ================= PWA：离线可用 ================= */
+if ("serviceWorker" in navigator &&
+    (location.protocol === "https:" || location.hostname === "localhost")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+/* ================= 初始化 ================= */
+renderCustom();
+if (custom.length) applySearch();
 </script>
 
 </body>

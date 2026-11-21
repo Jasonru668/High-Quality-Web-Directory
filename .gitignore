@@ -12,3 +12,7 @@ desktop.ini
 # Node（如后续引入工具链）
 node_modules/
 dist/
+
+# 巡检临时产物
+link-report.md
+link-summary.json
